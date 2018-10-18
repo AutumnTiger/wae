@@ -1,0 +1,33 @@
+<h1> PS1:BASICS </h1>
+
+<br>
+<table>
+<tr>
+<th>
+
+  Tasks
+</th>
+<th>
+
+
+  Description
+</th>
+
+</tr>
+
+  <tr>
+    <td><%=link_to 'Divide by Zero', '/basics/divbyzero'  %></td>
+    <td> The objective was to log the error produced by dividing by zero. When the user clicks the link, the request is sent to an action which raises the error and also logs it  </td>
+  </tr>
+
+  <tr>
+    <td><%=link_to 'Google News','/basics/news' %></td>
+    <td>The objective was to scrape the headlines, links and images from Google news. It was done using nokogiri. In nokogiri,we can scrape particular html elements using css Selectors
+    For example: doc.css('h2.OJMBqe') will point towards an h2 element of that name. The process was to find elements sharing the same names and then scraping them to collect them in an array and
+      then render in an html document.
+
+    </td>
+  </tr>
+
+
+</table>

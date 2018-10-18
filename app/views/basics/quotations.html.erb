@@ -1,0 +1,67 @@
+<h3>Quotations</h3>
+
+<%= form_tag("/basics/search",  method: "get") do %>
+  <%= text_field_tag :quote %>
+  <br>
+  <%= submit_tag 'Search'%>
+<% end %>
+<ul>
+  <% for quotation in @quotations %>
+    <li><%= h quotation.author_name %>: <%= h quotation.quote %> <a href="/basics/quotations/<%= quotation.id%> ">delete</a></li>
+  <% end %>
+
+</ul>
+<br/>
+<% if params[:sort_by] == "date" %>
+  <%= link_to "Sort by category", :action => :quotations, :sort_by => :category %>
+<% else %>
+  <%= link_to "Sort by date", :action => :quotations, :sort_by => :date %>
+<% end %>
+<hr/>
+<br>
+<a href="/basics/erase">Erase Personalization</a>
+<br>
+<a href="/basics/exportXML"  >XML</a>
+<br>
+<a href="/basics/exportJSON"  >JSON</a>
+<br>
+<br>
+<%= form_tag("/basics/import",  method: "get") do %>
+  <%= text_field_tag :import %>
+  &nbsp;&nbsp;
+  <%= submit_tag 'Import' , name: nil%>
+<% end %>
+<br>
+<br>
+<h3>New quotation</h3>
+        <%= form_for @quotation, :url => { :action => :quotations } do |form| %>
+            <%= form.error_messages %>
+  <fieldset>
+    <legend>Enter details</legend>
+        <div class="form_row">
+             <%= form.label :author_name %>
+             <%= form.text_field :author_name, :size => 20, :maxlength => 40 %>
+         </div>
+
+         <div class="form_row">
+            <%= form.label :category %>
+            <%= form.collection_select :category, @categories,:category,:category ,prompt: true  %>
+         </div>
+
+         <div class="form_row">
+            <%= form.label :new_category %>
+            <%= form.text_field :new_category, :size => 20, :maxlength => 40 %>
+
+
+         </div>
+         <div class="form_row">
+             <%= form.label :quote %>
+             <%= form.text_area :quote, :rows => 2, :cols => 40, :maxlength => 500 %>
+         </div>
+  </fieldset>
+  <p>
+         <div class="form_row">
+             <%= form.submit 'Create' %>
+         </div>
+  </p>
+<% end %>

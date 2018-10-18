@@ -1,0 +1,304 @@
+********* QUERY **********
+set datestyle to MDY;
+**************************
+
+SET
+********* QUERY **********
+COPY my_stocks FROM '/home/anubinda/stocks' ( FORMAT text );
+**************************
+
+COPY 5
+********* QUERY **********
+select * from my_stocks;
+**************************
+
+ symbol | n_shares | date_acquired 
+--------+----------+---------------
+ $AAPL  |      120 | 2010-08-22
+ $NFLX  |      200 | 2017-09-19
+ $TSLA  |      100 | 2018-10-10
+ $MSFT  |      150 | 2000-07-12
+ $AMD   |      250 | 2009-10-08
+ $JNPR  |      200 | 2000-09-09
+ $NFLX  |      200 | 2018-09-14
+ $TSLA  |      100 | 2018-09-14
+ $MSFT  |      150 | 2018-09-14
+ $AAPL  |      120 | 2010-08-22
+ $NFLX  |      200 | 2017-09-19
+ $TSLA  |      100 | 2018-10-10
+ $MSFT  |      150 | 2000-07-12
+ $AMD   |      250 | 2009-10-08
+(14 rows)
+
+********* QUERY **********
+create table stock_prices as select symbol,current_date as quote_date,31.415 as price from my_stocks;
+**************************
+
+********* QUERY **********
+select * from stock_prices;
+**************************
+
+ symbol | quote_date | price 
+--------+------------+-------
+ $AAPL  | 2018-09-14 |   322
+ $NFLX  | 2018-09-14 |   348
+ $TSLA  | 2018-09-14 |   344
+ $MSFT  | 2018-09-14 |   350
+ $AMD   | 2018-09-14 |   246
+(5 rows)
+
+********* QUERY **********
+insert into newly_acquired_stocks (symbol,n_shares,data_acquired) select symbol,n_shares,date_acquired from my_stocks where n_shares>100;
+**************************
+
+********* QUERY **********
+select * from newly_acquired_stocks 
+select my_stocks.symbol,my_stocks.n_shares,stock_prices.price,(my_stocks.n_shares * stock_prices.price) AS current_value from my_stocks,stock_prices WHERE my_stocks.symbol=stock_prices.symbol;
+**************************
+
+********* QUERY **********
+insert into my_stocks values('$JNPR',200,'2000-09-09');
+**************************
+
+INSERT 0 1
+********* QUERY **********
+select * from my_stocks;
+**************************
+
+ symbol | n_shares | date_acquired 
+--------+----------+---------------
+ $AAPL  |      120 | 2010-08-22
+ $NFLX  |      200 | 2017-09-19
+ $TSLA  |      100 | 2018-10-10
+ $MSFT  |      150 | 2000-07-12
+ $AMD   |      250 | 2009-10-08
+ $JNPR  |      200 | 2000-09-09
+ $NFLX  |      200 | 2018-09-14
+ $TSLA  |      100 | 2018-09-14
+ $MSFT  |      150 | 2018-09-14
+ $AAPL  |      120 | 2010-08-22
+ $NFLX  |      200 | 2017-09-19
+ $TSLA  |      100 | 2018-10-10
+ $MSFT  |      150 | 2000-07-12
+ $AMD   |      250 | 2009-10-08
+ $JNPR  |      200 | 2000-09-09
+(15 rows)
+
+********* QUERY **********
+select my_stocks.symbol,my_stocks.n_shares,stock_prices.price,(my_stocks.n_shares * stock_prices.price) AS current_value from my_stocks,stock_prices WHERE my_stocks.symbol=stock_prices.symbol;
+**************************
+
+ symbol | n_shares | price | current_value 
+--------+----------+-------+---------------
+ $AAPL  |      120 |   322 |         38640
+ $NFLX  |      200 |   348 |         69600
+ $TSLA  |      100 |   344 |         34400
+ $MSFT  |      150 |   350 |         52500
+ $AMD   |      250 |   246 |         61500
+ $NFLX  |      200 |   348 |         69600
+ $TSLA  |      100 |   344 |         34400
+ $MSFT  |      150 |   350 |         52500
+ $AAPL  |      120 |   322 |         38640
+ $NFLX  |      200 |   348 |         69600
+ $TSLA  |      100 |   344 |         34400
+ $MSFT  |      150 |   350 |         52500
+ $AMD   |      250 |   246 |         61500
+(13 rows)
+
+********* QUERY **********
+select my_stocks.symbol,my_stocks.n_shares,stock_prices.price,(my_stocks.n_shares * stock_prices.price) AS current_value from my_stocks FULL OUTER JOIN stock_prices ON (my_stocks.symbol=stock_prices.symbol);
+**************************
+
+ symbol | n_shares | price | current_value 
+--------+----------+-------+---------------
+ $AAPL  |      120 |   322 |         38640
+ $NFLX  |      200 |   348 |         69600
+ $TSLA  |      100 |   344 |         34400
+ $MSFT  |      150 |   350 |         52500
+ $AMD   |      250 |   246 |         61500
+ $JNPR  |      200 |       |              
+ $NFLX  |      200 |   348 |         69600
+ $TSLA  |      100 |   344 |         34400
+ $MSFT  |      150 |   350 |         52500
+ $AAPL  |      120 |   322 |         38640
+ $NFLX  |      200 |   348 |         69600
+ $TSLA  |      100 |   344 |         34400
+ $MSFT  |      150 |   350 |         52500
+ $AMD   |      250 |   246 |         61500
+ $JNPR  |      200 |       |              
+(15 rows)
+
+********* QUERY **********
+select stocksymbol('AAPL');
+**************************
+
+ stocksymbol 
+-------------
+         286
+(1 row)
+
+********* QUERY **********
+select * from my_stocks;
+**************************
+
+ symbol | n_shares | date_acquired 
+--------+----------+---------------
+ $AAPL  |      120 | 2010-08-22
+ $NFLX  |      200 | 2017-09-19
+ $TSLA  |      100 | 2018-10-10
+ $MSFT  |      150 | 2000-07-12
+ $AMD   |      250 | 2009-10-08
+ $JNPR  |      200 | 2000-09-09
+ $NFLX  |      200 | 2018-09-14
+ $TSLA  |      100 | 2018-09-14
+ $MSFT  |      150 | 2018-09-14
+ $AAPL  |      120 | 2010-08-22
+ $NFLX  |      200 | 2017-09-19
+ $TSLA  |      100 | 2018-10-10
+ $MSFT  |      150 | 2000-07-12
+ $AMD   |      250 | 2009-10-08
+ $JNPR  |      200 | 2000-09-09
+(15 rows)
+
+********* QUERY **********
+select stocksymbol('NFLX');
+**************************
+
+ stocksymbol 
+-------------
+         312
+(1 row)
+
+********* QUERY **********
+select stocksymbol('TSLA');
+**************************
+
+ stocksymbol 
+-------------
+         308
+(1 row)
+
+********* QUERY **********
+select stocksymbol('MSFT');
+**************************
+
+ stocksymbol 
+-------------
+         314
+(1 row)
+
+********* QUERY **********
+select stocksymbol('AMD');
+**************************
+
+ stocksymbol 
+-------------
+         210
+(1 row)
+
+********* QUERY **********
+select stocksymbol('JNPR');
+**************************
+
+ stocksymbol 
+-------------
+         314
+(1 row)
+
+********* QUERY **********
+update stock_prices set price = stocksymbol(symbol) where symbol in (SELECT symbol from my_stocks);
+**************************
+
+UPDATE 5
+********* QUERY **********
+select * from stock_prices;
+**************************
+
+ symbol | quote_date | price 
+--------+------------+-------
+ $AAPL  | 2018-09-14 |   322
+ $NFLX  | 2018-09-14 |   348
+ $TSLA  | 2018-09-14 |   344
+ $MSFT  | 2018-09-14 |   350
+ $AMD   | 2018-09-14 |   246
+(5 rows)
+
+********* QUERY **********
+CREATE OR REPLACE FUNCTION portfolio_value() RETURNS void AS $$
+DECLARE p_id varchar(10);
+DECLARE p_price float;
+DECLARE p_num_shares integer;
+DECLARE p_total_price float;
+DECLARE cu CURSOR FOR SELECT my_stocks.symbol, my_stocks.n_shares,stock_prices.price,(my_stocks.n_shares * stock_prices.price) AS current_value FROM my_stocks,stock_prices WHERE my_stocks.symbol = stock_prices.symbol;  
+BEGIN
+OPEN cu;
+-- fetch each record
+LOOP
+FETCH cu INTO p_id,p_price,p_num_shares,p_total_price;
+EXIT WHEN NOT FOUND;
+RAISE NOTICE 'Stock: %,Price: %, Number of Shares: %, Total Price: %',p_id,p_price,p_num_shares,p_total_price ;
+END LOOP;
+CLOSE cu;
+END;
+$$ LANGUAGE plpgsql;
+**************************
+
+CREATE FUNCTION
+********* QUERY **********
+select portfolio_value();
+**************************
+
+ portfolio_value 
+-----------------
+ 
+(1 row)
+
+********* QUERY **********
+INSERT INTO my_stocks SELECT my_stocks.symbol,my_stocks.n_shares, CURRENT_DATE AS date_acquired FROM stock_prices, my_stocks WHERE stock_prices.symbol=my_stocks.symbol AND stock_prices.price > (SELECT Avg(price) FROM stock_prices);
+**************************
+
+INSERT 0 9
+********* QUERY **********
+SELECT symbol, SUM(n_shares) AS total_shares FROM my_stocks GROUP BY symbol;
+**************************
+
+ symbol | total_shares 
+--------+--------------
+ $NFLX  |         1200
+ $AMD   |          500
+ $AAPL  |          240
+ $JNPR  |          400
+ $MSFT  |          900
+ $TSLA  |          600
+(6 rows)
+
+********* QUERY **********
+SELECT my_stocks.symbol, Sum(my_stocks.n_shares * stock_prices.price) AS total_value FROM my_stocks INNER JOIN stock_prices ON stock_prices.symbol = my_stocks.symbol GROUP BY my_stocks.symbol;
+**************************
+
+ symbol | total_value 
+--------+-------------
+ $NFLX  |      417600
+ $AMD   |      123000
+ $AAPL  |       77280
+ $MSFT  |      315000
+ $TSLA  |      206400
+(5 rows)
+
+********* QUERY **********
+SELECT my_stocks.symbol,Sum(my_stocks.n_shares) AS total_shares, Sum(my_stocks.n_shares * stock_prices.price) AS total_value FROM my_stocks INNER JOIN stock_prices ON stock_prices.symbol = my_stocks.symbol GROUP BY my_stocks.symbol HAVING COUNT(my_stocks.symbol) >= 2;
+**************************
+
+ symbol | total_shares | total_value 
+--------+--------------+-------------
+ $NFLX  |         1200 |      417600
+ $AMD   |          500 |      123000
+ $AAPL  |          240 |       77280
+ $MSFT  |          900 |      315000
+ $TSLA  |          600 |      206400
+(5 rows)
+
+********* QUERY **********
+CREATE VIEW stocks_i_like AS SELECT my_stocks.symbol, Sum(my_stocks.n_shares) AS total_shares, Sum(my_stocks.n_shares * stock_prices.price) AS total_value FROM my_stocks INNER JOIN stock_prices ON stock_prices.symbol = my_stocks.symbol GROUP BY my_stocks.symbol HAVING Count(my_stocks.symbol) >= 2;
+**************************
+
